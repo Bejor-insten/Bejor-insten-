@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDP Coloring Books - Your Store Name</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #7c3aed;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #7c3aed;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f3e7ff 0%, #e0f2fe 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .hero h1 span {
+            color: #7c3aed;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #7c3aed;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background: #6d28d9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        /* Books Grid */
+        .books-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1a1a1a;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 300px;
+            background: #f0f0f0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-info {
+            padding: 1.5rem;
+        }
+
+        .book-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .book-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .book-preview {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .preview-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 5px;
+            background: #f0f0f0;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.3s;
+        }
+
+        .preview-img:hover {
+            border-color: #7c3aed;
+        }
+
+        .preview-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-amazon-link {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            background: #FF9900;
+            color: white;
+            padding: 0.8rem;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .book-amazon-link:hover {
+            background: #E68900;
+        }
+
+        /* Modal for Preview */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 600px;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        /* Features Section */
+        .features {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .book-cover {
+                height: 250px;
+            }
+        }
+
+        /* Scroll Animation */
+        .fade-in {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-section {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.8rem;
+            border: 2px solid #7c3aed;
+            border-radius: 25px;
+            font-size: 1rem;
+            margin: 0 auto;
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">📚 KDP Books Store</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#books">Books</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Creative <span>Coloring Books</span> for Everyone</h1>
+            <p>High-quality KDP coloring books. Beautiful designs that inspire creativity and mindfulness.</p>
+            <a href="#books" class="cta-button">📖 Explore Our Collection</a>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search books...">
+    </section>
+
+    <!-- Books Section -->
+    <section class="books-section" id="books">
+        <h2 class="section-title">Our Popular Books</h2>
+        <div class="books-grid" id="booksGrid">
+            <!-- Books will be loaded here from JavaScript -->
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Why Choose Us?</h2>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🎨</div>
+                <h3>High Quality Designs</h3>
+                <p>Professionally designed and print-ready coloring pages.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">✨</div>
+                <h3>Unique Themes</h3>
+                <p>Wide variety of themes for all age groups and interests.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">📦</div>
+                <h3>KDP Quality</h3>
+                <p>All books meet Amazon KDP standards and specifications.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🌍</div>
+                <h3>Global Reach</h3>
+                <p>Available worldwide through Amazon KDP platform.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <p>&copy; 2024 KDP Coloring Books. All rights reserved. | <a href="#" style="color: #7c3aed;">Pinterest</a> | <a href="#" style="color: #7c3aed;">Instagram</a></p>
+    </footer>
+
+    <!-- Modal for Image Preview -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" class="modal-image" src="" alt="Preview">
+            <h2 id="modalTitle"></h2>
+            <p id="modalDescription"></p>
+        </div>
+    </div>
+
+    <script>
+        // ====== BOOKS DATA - यहाँ अपनी books add करें ======
+        const booksData = [
+            {
+                id: 1,
+                title: "Cute Animals Coloring Book",
+                description: "Beautiful animals with flowers and nature",
+                cover: "https://via.placeholder.com/250x300?text=Cute+Animals",
+                preview: [
+                    "https://via.placeholder.com/50x50?text=Preview1",
+                    "https://via.placeholder.com/50x50?text=Preview2",
+                    "https://via.placeholder.com/50x50?text=Preview3"
+                ],
+                amazonLink: "https://www.amazon.com/your-book-link-1"
+            },
+            {
+                id: 2,
+                title: "Mindful Moments",
+                description: "Mandala and pattern-based coloring designs",
+                cover: "https://via.placeholder.com/250x300?text=Mindful+Moments",
+                preview: [
+                    "https://via.placeholder.com/50x50?text=Preview1",
+                    "https://via.placeholder.com/50x50?text=Preview2",
+                    "https://via.placeholder.com/50x50?text=Preview3"
+                ],
+                amazonLink: "https://www.amazon.com/your-book-link-2"
+            },
+            {
+                id: 3,
+                title: "Nature Escapes",
+                description: "Landscapes, forests, mountains and scenic views",
+                cover: "https://via.placeholder.com/250x300?text=Nature+Escapes",
+                preview: [
+                    "https://via.placeholder.com/50x50?text=Preview1",
+                    "https://via.placeholder.com/50x50?text=Preview2",
+                    "https://via.placeholder.com/50x50?text=Preview3"
+                ],
+                amazonLink: "https://www.amazon.com/your-book-link-3"
+            },
+            {
+                id: 4,
+                title: "Fantasy Worlds",
+                description: "Dragons, unicorns, and magical creatures",
+                cover: "https://via.placeholder.com/250x300?text=Fantasy+Worlds",
+                preview: [
+                    "https://via.placeholder.com/50x50?text=Preview1",
+                    "https://via.placeholder.com/50x50?text=Preview2",
+                    "https://via.placeholder.com/50x50?text=Preview3"
+                ],
+                amazonLink: "https://www.amazon.com/your-book-link-4"
+            },
+            {
+                id: 5,
+                title: "Floral Designs",
+                description: "Beautiful flowers and botanical patterns",
+                cover: "https://via.placeholder.com/250x300?text=Floral+Designs",
+                preview: [
+                    "https://via.placeholder.com/50x50?text=Preview1",
+                    "https://via.placeholder.com/50x50?text=Preview2",
+                    "https://via.placeholder.com/50x50?text=Preview3"
+                ],
+                amazonLink: "https://www.amazon.com/your-book-link-5"
+            },
+            {
+                id: 6,
+                title: "Geometric Patterns",
+                description: "Modern geometric and abstract designs",
+                cover: "https://via.placeholder.com/250x300?text=Geometric",
+                preview: [
+                    "https://via.placeholder.com/50x50?text=Preview1",
+                    "https://via.placeholder.com/50x50?text=Preview2",
+                    "https://via.placeholder.com/50x50?text=Preview3"
+                ],
+                amazonLink: "https://www.amazon.com/your-book-link-6"
+            }
+        ];
+
+        let filteredBooks = [...booksData];
+
+        // Render Books
+        function renderBooks(books) {
+            const booksGrid = document.getElementById('booksGrid');
+            booksGrid.innerHTML = '';
+
+            books.forEach((book, index) => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card fade-in';
+                bookCard.style.animationDelay = `${index * 0.1}s`;
+
+                bookCard.innerHTML = `
+                    <div class="book-cover">
+                        <img src="${book.cover}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/250x300?text=${book.title}'">
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">${book.title}</h3>
+                        <p class="book-description">${book.description}</p>
+                        <div class="book-preview">
+                            ${book.preview.map((img, i) => `
+                                <div class="preview-img" onclick="openModal('${book.title}', '${img}', '${book.description}')">
+                                    <img src="${img}" alt="Preview" onerror="this.src='https://via.placeholder.com/50x50?text=Preview'">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <a href="${book.amazonLink}" target="_blank" class="book-amazon-link">
+                            🛒 View on Amazon
+                        </a>
+                    </div>
+                `;
+                booksGrid.appendChild(bookCard);
+            });
+        }
+
+        // Modal Functions
+        function openModal(title, imageSrc, description) {
+            document.getElementById('imageModal').classList.add('active');
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDescription').textContent = description;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        // Search Functionality
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            filteredBooks = booksData.filter(book =>
+                book.title.toLowerCase().includes(searchTerm) ||
+                book.description.toLowerCase().includes(searchTerm)
+            );
+            renderBooks(filteredBooks);
+        });
+
+        // Close modal on background click
+        document.getElementById('imageModal').addEventListener('click', (e) => {
+            if (e.target.id === 'imageModal') {
+                closeModal();
+            }
+        });
+
+        // Initial render
+        renderBooks(booksData);
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
